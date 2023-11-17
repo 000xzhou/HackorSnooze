@@ -81,6 +81,7 @@ class StoryList {
         url: newStory.url,
       },
     };
+    console.log(payload);
     try {
       await axios.post(`${BASE_URL}/stories`, payload);
     } catch (error) {

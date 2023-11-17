@@ -50,3 +50,21 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+$addStoryorm.on("click", addStory);
+async function addStory(evt) {
+  evt.preventDefault();
+
+  if (
+    $("#title").val() !== "" &&
+    $("#author").val() !== "" &&
+    $("#url").val() !== ""
+  ) {
+    await storyList.addStory(currentUser, {
+      title: $("#title").val(),
+      author: $("#author").val(),
+      url: $("#url").val(),
+    });
+  }
+  $addStoryorm.trigger("reset");
+}
