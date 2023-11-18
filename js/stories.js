@@ -22,30 +22,51 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
-
+  console.debug("generateStoryMarkup", story);
   const hostName = story.getHostName();
   return $(`
-    <li id="${story.storyId}">
-      <div class="inside-li-container">
-        <div>
-          <i class="star-icon fa-regular fa-star fa-xl"></i>
-          <a href="${story.url}" target="a_blank" class="story-link">
-            ${story.title}
-          </a>
-          <small class="story-hostname">(${hostName})</small>
-        </div>
+  <li id="${story.storyId}">
+    <div class="inside-li-container">
+      <div>
+        <i class="star-icon fa-regular fa-star fa-xl"></i>
+        <a href="${story.url}" target="a_blank" class="story-link">
+          ${story.title}
+        </a>
+        <small class="story-hostname">(${hostName})</small>
         <small class="story story-author">by ${story.author}</small>
         <small class="story story-user">posted by ${story.username}</small>
       </div>
-    </li>
+    </div>
+  </li>
+  `);
+}
+//  generateMyStoriesMarkup for my stories to delete in that page
+function generateMyStoriesMarkup(story) {
+  const hostName = story.getHostName();
+  return $(`
+  <li id="${story.storyId}">
+    <div class="inside-li-container">
+      <div>
+        <i class="star-icon fa-regular fa-star fa-xl"></i>
+        <a href="${story.url}" target="a_blank" class="story-link">
+          ${story.title}
+        </a>
+        <small class="story-hostname">(${hostName})</small>
+        <small class="story story-author">by ${story.author}</small>
+        <small class="story story-user">posted by ${story.username}</small>
+      </div>
+      <div>
+        <button class="editBtn">Edit</button>
+        <button class="deleteBtn">Delete</button>
+        </div>
+    </div>
+  </li>
     `);
 }
-
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
-  console.log("hi on stroy");
+  // console.log("hi on stroy");
 
   console.debug("putStoriesOnPage");
 
@@ -61,7 +82,7 @@ function putStoriesOnPage() {
 }
 // get all my fav stories
 async function putFavStoriesOnPage() {
-  console.log("hi on fav");
+  // console.log("hi on fav");
   favStoryList = await StoryList.getFav();
 
   $allStoriesList.empty();
@@ -75,13 +96,13 @@ async function putFavStoriesOnPage() {
 }
 // get all the stroies I posted
 async function putMyStoriesOnPage() {
-  console.log("hi on my stories");
+  // console.log("hi on my stories");
   myStoryList = await StoryList.getMyStories();
 
   $allStoriesList.empty();
   // loop through all of our stories and generate HTML for them
   for (let story of myStoryList.stories) {
-    const $story = generateStoryMarkup(story);
+    const $story = generateMyStoriesMarkup(story);
     $allStoriesList.append($story);
   }
 
@@ -91,19 +112,23 @@ async function putMyStoriesOnPage() {
 $addStoryorm.on("submit", addStory);
 async function addStory(evt) {
   evt.preventDefault();
-
   if (
     $("#title").val() !== "" &&
     $("#author").val() !== "" &&
     $("#url").val() !== ""
   ) {
-    await storyList.addStory(currentUser, {
+    const addStroyFun = await storyList.addStory(currentUser, {
       title: $("#title").val(),
       author: $("#author").val(),
       url: $("#url").val(),
     });
+    // checks if addStoryFun error or not (try try..catch but didn't work I guess because it's a function to another function that does that job)
+    if (addStroyFun) {
+      location.reload();
+    } else {
+      $addStoryorm.trigger("reset");
+    }
   }
-  $addStoryorm.trigger("reset");
 }
 
 // adding and delete favs

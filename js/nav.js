@@ -8,18 +8,16 @@
 
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
+  // Refresh the page after a delay of 3 seconds
   hidePageComponents();
-  $addStoryorm.hide();
   putStoriesOnPage();
 }
 function navAllFavStories(evt) {
   hidePageComponents();
-  $addStoryorm.hide();
   putFavStoriesOnPage();
 }
 function navAllMyStories(evt) {
   hidePageComponents();
-  $addStoryorm.hide();
   putMyStoriesOnPage();
 }
 $body.on("click", "#nav-all", navAllStories);

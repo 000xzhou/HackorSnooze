@@ -23,7 +23,7 @@ const $addStoryBtn = $("#add-story-btn");
  */
 
 function hidePageComponents() {
-  const components = [$allStoriesList, $loginForm, $signupForm];
+  const components = [$allStoriesList, $loginForm, $signupForm, $addStoryorm];
   components.forEach((c) => c.hide());
 }
 

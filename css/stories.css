@@ -33,10 +33,10 @@
   color: green;
 }
 .story-user {
-  display: block;
   color: orange;
 }
 .story {
+  display: block;
   margin-left: 2.5em;
 }
 
@@ -45,4 +45,9 @@
 }
 .star-icon:hover {
   color: #ff6600;
+}
+.inside-li-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
