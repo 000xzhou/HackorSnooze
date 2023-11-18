@@ -130,7 +130,9 @@ class StoryList {
       const stories = response.data.stories.map((story) => new Story(story));
 
       const myStories = stories.filter((story) =>
-        currentUser.ownStories.some((fav) => fav.storyId === story.storyId)
+        currentUser.ownStories.some(
+          (myStory) => myStory.storyId === story.storyId
+        )
       );
       // build an instance of our own class using the new array of stories
       console.log(myStories);
