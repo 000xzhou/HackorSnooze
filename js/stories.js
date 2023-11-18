@@ -3,6 +3,7 @@
 // This is the global list of the stories, an instance of StoryList
 let storyList;
 let favStoryList;
+let myStoryList;
 
 /** Get and show stories when site first loads. */
 
@@ -39,25 +40,7 @@ function generateStoryMarkup(story) {
       <hr>
     `);
 }
-function generateFavStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
 
-  const hostName = story.getHostName();
-  return $(`
-  <li id="${story.storyId}">
-    <i class="star-icon fa-regular fa-star fa-xl"></i>
-        <div>
-          <a href="${story.url}" target="a_blank" class="story-link">
-            ${story.title}
-          </a>
-          <small class="story-hostname">(${hostName})</small>
-          <small class="story-author">by ${story.author}</small>
-          <small class="story-user">posted by ${story.username}</small>
-        </div>
-      </li>
-      <hr>
-    `);
-}
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
@@ -75,7 +58,7 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
-
+// get all my fav stories
 async function putFavStoriesOnPage() {
   console.log("hi on fav");
   favStoryList = await StoryList.getFav();
@@ -89,9 +72,22 @@ async function putFavStoriesOnPage() {
 
   $allStoriesList.show();
 }
+// get all the stroies I posted
+async function putMyStoriesOnPage() {
+  console.log("hi on my stories");
+  myStoryList = await StoryList.getMyStories();
 
+  $allStoriesList.empty();
+  // loop through all of our stories and generate HTML for them
+  for (let story of myStoryList.stories) {
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
+  }
+
+  $allStoriesList.show();
+}
 // add story
-$addStoryorm.on("click", addStory);
+$addStoryorm.on("submit", addStory);
 async function addStory(evt) {
   evt.preventDefault();
 

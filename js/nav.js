@@ -9,16 +9,24 @@
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
+  $addStoryorm.hide();
   putStoriesOnPage();
 }
 function navAllFavStories(evt) {
   hidePageComponents();
+  $addStoryorm.hide();
   putFavStoriesOnPage();
 }
-
+function navAllMyStories(evt) {
+  hidePageComponents();
+  $addStoryorm.hide();
+  putMyStoriesOnPage();
+}
 $body.on("click", "#nav-all", navAllStories);
 // displaying favs
 $body.on("click", "#fav-btn", navAllFavStories);
+// displaying mt stories
+$body.on("click", "#my-stories-btn", navAllMyStories);
 
 /** Show login/signup on click on "login" */
 function navLoginClick(evt) {
