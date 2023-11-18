@@ -11,11 +11,16 @@ function navAllStories(evt) {
   hidePageComponents();
   putStoriesOnPage();
 }
+function navAllFavStories(evt) {
+  hidePageComponents();
+  putFavStoriesOnPage();
+}
 
 $body.on("click", "#nav-all", navAllStories);
+// displaying favs
+$body.on("click", "#fav-btn", navAllFavStories);
 
 /** Show login/signup on click on "login" */
-
 function navLoginClick(evt) {
   console.debug("navLoginClick", evt);
   hidePageComponents();

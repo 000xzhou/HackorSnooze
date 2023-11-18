@@ -2,6 +2,7 @@
 
 // This is the global list of the stories, an instance of StoryList
 let storyList;
+let favStoryList;
 
 /** Get and show stories when site first loads. */
 
@@ -38,10 +39,30 @@ function generateStoryMarkup(story) {
       <hr>
     `);
 }
+function generateFavStoryMarkup(story) {
+  // console.debug("generateStoryMarkup", story);
 
+  const hostName = story.getHostName();
+  return $(`
+  <li id="${story.storyId}">
+    <i class="star-icon fa-regular fa-star fa-xl"></i>
+        <div>
+          <a href="${story.url}" target="a_blank" class="story-link">
+            ${story.title}
+          </a>
+          <small class="story-hostname">(${hostName})</small>
+          <small class="story-author">by ${story.author}</small>
+          <small class="story-user">posted by ${story.username}</small>
+        </div>
+      </li>
+      <hr>
+    `);
+}
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 function putStoriesOnPage() {
+  console.log("hi on stroy");
+
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
@@ -55,6 +76,21 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
+async function putFavStoriesOnPage() {
+  console.log("hi on fav");
+  favStoryList = await StoryList.getFav();
+
+  $allStoriesList.empty();
+  // loop through all of our stories and generate HTML for them
+  for (let story of favStoryList.stories) {
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
+  }
+
+  $allStoriesList.show();
+}
+
+// add story
 $addStoryorm.on("click", addStory);
 async function addStory(evt) {
   evt.preventDefault();
@@ -73,6 +109,7 @@ async function addStory(evt) {
   $addStoryorm.trigger("reset");
 }
 
+// adding and delete favs
 $allStoriesList.on("click", ".fa-regular", addtoFav);
 async function addtoFav() {
   let storyId = this.parentElement.id;
