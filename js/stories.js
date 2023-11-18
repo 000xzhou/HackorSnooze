@@ -24,14 +24,18 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
   return $(`
-      <li id="${story.storyId}">
-        <a href="${story.url}" target="a_blank" class="story-link">
-          ${story.title}
-        </a>
-        <small class="story-hostname">(${hostName})</small>
-        <small class="story-author">by ${story.author}</small>
-        <small class="story-user">posted by ${story.username}</small>
+  <li id="${story.storyId}">
+    <i class="star-icon fa-regular fa-star fa-xl"></i>
+        <div>
+          <a href="${story.url}" target="a_blank" class="story-link">
+            ${story.title}
+          </a>
+          <small class="story-hostname">(${hostName})</small>
+          <small class="story-author">by ${story.author}</small>
+          <small class="story-user">posted by ${story.username}</small>
+        </div>
       </li>
+      <hr>
     `);
 }
 
@@ -67,4 +71,16 @@ async function addStory(evt) {
     });
   }
   $addStoryorm.trigger("reset");
+}
+
+$allStoriesList.on("click", ".fa-regular", addtoFav);
+async function addtoFav() {
+  let storyId = this.parentElement.id;
+  await User.addFav(currentUser, storyId);
+  $(this).removeClass("fa-regular").addClass("fa-solid");
+}
+$allStoriesList.on("click", ".fa-solid", deleteFromFav);
+async function deleteFromFav() {
+  let storyId = this.parentElement.id;
+  $(this).removeClass("fa-solid").addClass("fa-regular");
 }

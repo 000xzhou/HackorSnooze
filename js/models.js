@@ -73,20 +73,31 @@ class StoryList {
 
   async addStory(user, newStory) {
     // UNIMPLEMENTED: complete this function!
-    const payload = {
-      token: user.loginToken,
-      story: {
-        author: newStory.author,
-        title: newStory.title,
-        url: newStory.url,
-      },
-    };
-    console.log(payload);
     try {
-      await axios.post(`${BASE_URL}/stories`, payload);
+      const newStoryResponse = await axios({
+        url: `${BASE_URL}/stories`,
+        method: "POST",
+        data: {
+          token: user.loginToken,
+          story: {
+            author: newStory.author,
+            title: newStory.title,
+            url: newStory.url,
+          },
+        },
+      });
+      const newStory2 = newStoryResponse.data;
+      // build an instance of our own class using the new array of stories
+      return new Story({
+        storyId: newStory2.storyId,
+        title: newStory2.title,
+        author: newStory2.author,
+        url: newStory2.url,
+        username: newStory2.username,
+        createdAt: newStory2.createdAt,
+      });
     } catch (error) {
-      // Handle error
-      console.error(error);
+      console.log("error creating new story:" + " " + error);
     }
   }
 }
@@ -200,4 +211,33 @@ class User {
       return null;
     }
   }
+
+  // get fav
+  static async getFav() {
+    const response = await axios({
+      url: `${BASE_URL}/users/${username}/favorites`,
+      method: "GET",
+    });
+
+    // turn plain old story objects from API into instances of Story class
+    const favorites = response.data.stories.map((f) => new Story(f));
+
+    // build an instance of our own class using the new array of stories
+    // return new User(favorites);
+  }
+  // add fav to api
+  static async addFav(user, storyId) {
+    try {
+      const res = await axios({
+        url: `${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+        method: "POST",
+        params: { token: user.loginToken },
+      });
+      const dataF = res.data;
+      console.log(dataF);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  static async deleteFav(user, storyId) {}
 }
