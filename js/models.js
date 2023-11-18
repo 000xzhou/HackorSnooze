@@ -100,6 +100,29 @@ class StoryList {
       console.log("error creating new story:" + " " + error);
     }
   }
+  async deleteMyStory(token, storyId) {
+    try {
+      await axios({
+        url: `${BASE_URL}/stories/${storyId}`,
+        method: "DELETE",
+        params: { token },
+      });
+    } catch (error) {
+      console.log("delete story area error: " + " " + error);
+    }
+  }
+  async editMyStory(token, storyId, story) {
+    try {
+      // toDO: do testing on params
+      await axios({
+        url: `${BASE_URL}/stories/${storyId}`,
+        method: "PATCH",
+        params: { token, story },
+      });
+    } catch (error) {
+      console.log("edit my story area error: " + " " + error);
+    }
+  }
   // get fav stories
   static async getFav() {
     try {
@@ -135,7 +158,7 @@ class StoryList {
         )
       );
       // build an instance of our own class using the new array of stories
-      console.log(myStories);
+      // console.log(myStories);
       return new StoryList(myStories);
     } catch (error) {
       console.log("getFav area error: " + " " + error);
