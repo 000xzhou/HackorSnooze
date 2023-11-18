@@ -1,13 +1,14 @@
 /* Lists of stories */
 
 .stories-list {
-  margin: 20px 5px;
+  margin: 5px 5px;
+  padding-right: 40px;
 }
 
 .stories-list > li {
   color: gray;
   font-size: 0.8rem;
-  margin: 10px 0;
+  padding: 1rem;
 }
 
 #stories-loading-msg {
@@ -21,28 +22,27 @@
 .story-link {
   color: black;
   font-size: 0.85rem;
-  font-weight: normal;
+  font-weight: bold;
   margin: 18px 0;
 }
 
 .story-link:hover {
   text-decoration: none;
 }
-
 .story-author {
-  margin-left: 2em;
+  color: green;
 }
-
 .story-user {
   display: block;
+  color: orange;
+}
+.story {
+  margin-left: 2.5em;
 }
 
-ol {
-  list-style: none;
+.star-icon {
+  cursor: pointer;
 }
-
-ol li {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.star-icon:hover {
+  color: #ff6600;
 }

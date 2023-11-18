@@ -26,18 +26,19 @@ function generateStoryMarkup(story) {
 
   const hostName = story.getHostName();
   return $(`
-  <li id="${story.storyId}">
-    <i class="star-icon fa-regular fa-star fa-xl"></i>
+    <li id="${story.storyId}">
+      <div class="inside-li-container">
         <div>
+          <i class="star-icon fa-regular fa-star fa-xl"></i>
           <a href="${story.url}" target="a_blank" class="story-link">
             ${story.title}
           </a>
           <small class="story-hostname">(${hostName})</small>
-          <small class="story-author">by ${story.author}</small>
-          <small class="story-user">posted by ${story.username}</small>
         </div>
-      </li>
-      <hr>
+        <small class="story story-author">by ${story.author}</small>
+        <small class="story story-user">posted by ${story.username}</small>
+      </div>
+    </li>
     `);
 }
 
@@ -106,9 +107,12 @@ async function addStory(evt) {
 }
 
 // adding and delete favs
+// toDO: Currently don't update HTML without hard reload. Same with adding new story
+// toDO: also need to save favStoryList, myStoryList, maybe the current(storyList) to local storage or something
+
 $allStoriesList.on("click", ".fa-regular", addtoFav);
 async function addtoFav() {
-  let storyId = this.parentElement.id;
+  let storyId = this.parentElement.parentElement.parentElement.id;
   await User.addFav(currentUser, storyId);
   $(this).removeClass("fa-regular").addClass("fa-solid");
 }
