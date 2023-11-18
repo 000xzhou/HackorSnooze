@@ -100,6 +100,25 @@ class StoryList {
       console.log("error creating new story:" + " " + error);
     }
   }
+  // get fav stories
+  static async getFav() {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/stories`,
+        method: "GET",
+      });
+
+      // turn plain old story objects from API into instances of Story class
+      const stories = response.data.stories.map((story) => new Story(story));
+      const favOnly = stories.filter((story) =>
+        currentUser.favorites.some((fav) => fav.storyId === story.storyId)
+      );
+      // build an instance of our own class using the new array of stories
+      return new StoryList(favOnly);
+    } catch (error) {
+      console.log("getFav area error: " + " " + error);
+    }
+  }
 }
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -212,19 +231,6 @@ class User {
     }
   }
 
-  // get fav
-  static async getFav() {
-    const response = await axios({
-      url: `${BASE_URL}/users/${username}/favorites`,
-      method: "GET",
-    });
-
-    // turn plain old story objects from API into instances of Story class
-    const favorites = response.data.stories.map((f) => new Story(f));
-
-    // build an instance of our own class using the new array of stories
-    // return new User(favorites);
-  }
   // add fav to api
   static async addFav(user, storyId) {
     try {
@@ -239,5 +245,17 @@ class User {
       console.log(error);
     }
   }
-  static async deleteFav(user, storyId) {}
+  static async deleteFav(user, storyId) {
+    try {
+      const res = await axios({
+        url: `${BASE_URL}/users/${user.username}/favorites/${storyId}`,
+        method: "DELETE",
+        params: { token: user.loginToken },
+      });
+      const dataF = res.data;
+      console.log(dataF);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

@@ -82,5 +82,6 @@ async function addtoFav() {
 $allStoriesList.on("click", ".fa-solid", deleteFromFav);
 async function deleteFromFav() {
   let storyId = this.parentElement.id;
+  await User.deleteFav(currentUser, storyId);
   $(this).removeClass("fa-solid").addClass("fa-regular");
 }
