@@ -21,16 +21,18 @@ async function login(evt) {
   // which we'll make the globally-available, logged-in user.
   try {
     currentUser = await User.login(username, password);
+    $loginForm.trigger("reset");
+
+    saveUserCredentialsInLocalStorage();
+    updateUIOnUserLogin();
   } catch (error) {
-    console.log(error);
-    console.log(
+    createErrorMessages(
       `${error.response.data.error.title}: ${error.response.data.error.message}`
     );
+    // console.log(
+    //   `${error.response.data.error.title}: ${error.response.data.error.message}`
+    // );
   }
-  $loginForm.trigger("reset");
-
-  saveUserCredentialsInLocalStorage();
-  updateUIOnUserLogin();
 }
 
 $loginForm.on("submit", login);
@@ -49,18 +51,25 @@ async function signup(evt) {
   // which we'll make the globally-available, logged-in user.
   try {
     currentUser = await User.signup(username, password, name);
+    saveUserCredentialsInLocalStorage();
+    updateUIOnUserLogin();
+    $signupForm.trigger("reset");
   } catch (error) {
-    console.log(
+    createErrorMessages(
       `${error.response.data.error.title}: ${error.response.data.error.message}`
     );
   }
-
-  saveUserCredentialsInLocalStorage();
-  updateUIOnUserLogin();
-
-  $signupForm.trigger("reset");
 }
+function createErrorMessages(str) {
+  $("#userError").remove();
 
+  const newDiv = $("<div></div>", {
+    text: str,
+    id: "userError",
+    class: "userErrorMessage",
+  });
+  $(".account-forms-container").prepend(newDiv);
+}
 $signupForm.on("submit", signup);
 
 /** Handle click of logout button
