@@ -83,7 +83,10 @@ function putStoriesOnPage() {
 // get all my fav stories
 async function putFavStoriesOnPage() {
   // console.log("hi on fav");
-  favStoryList = await StoryList.getFav();
+  // favStoryList = await StoryList.getFav();
+  favStoryList = await User.getFav(currentUser);
+  // console.log(favStoryList);
+  // console.log(await User.getFav(currentUser).favorites);
 
   $allStoriesList.empty();
   // loop through all of our stories and generate HTML for them
@@ -97,7 +100,7 @@ async function putFavStoriesOnPage() {
 // get all the stroies I posted
 async function putMyStoriesOnPage() {
   // console.log("hi on my stories");
-  myStoryList = await StoryList.getMyStories();
+  myStoryList = await User.getMyStories(currentUser);
 
   $allStoriesList.empty();
   // loop through all of our stories and generate HTML for them
@@ -138,12 +141,17 @@ async function addStory(evt) {
 $allStoriesList.on("click", ".fa-regular", addtoFav);
 async function addtoFav() {
   let storyId = this.parentElement.parentElement.parentElement.id;
-  await User.addFav(currentUser, storyId);
+  let res = await User.addFav(currentUser, storyId);
+  // console.log(res.user);
+  // console.log(favStoryList.stories);
+  // console.log(await User.getFav(currentUser));
+
   $(this).removeClass("fa-regular").addClass("fa-solid");
 }
 $allStoriesList.on("click", ".fa-solid", deleteFromFav);
 async function deleteFromFav() {
-  let storyId = this.parentElement.id;
+  let storyId = this.parentElement.parentElement.parentElement.id;
+  // console.log(this.parentElement.parentElement.parentElement);
   await User.deleteFav(currentUser, storyId);
   $(this).removeClass("fa-solid").addClass("fa-regular");
 }

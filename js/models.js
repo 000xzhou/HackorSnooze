@@ -123,47 +123,6 @@ class StoryList {
       console.log("edit my story area error: " + " " + error);
     }
   }
-  // get fav stories
-  static async getFav() {
-    try {
-      const response = await axios({
-        url: `${BASE_URL}/stories`,
-        method: "GET",
-      });
-
-      // turn plain old story objects from API into instances of Story class
-      const stories = response.data.stories.map((story) => new Story(story));
-      const favOnly = stories.filter((story) =>
-        currentUser.favorites.some((fav) => fav.storyId === story.storyId)
-      );
-      // build an instance of our own class using the new array of stories
-      return new StoryList(favOnly);
-    } catch (error) {
-      console.log("getFav area error: " + " " + error);
-    }
-  }
-  static async getMyStories() {
-    try {
-      const response = await axios({
-        url: `${BASE_URL}/stories`,
-        method: "GET",
-      });
-
-      // turn plain old story objects from API into instances of Story class
-      const stories = response.data.stories.map((story) => new Story(story));
-
-      const myStories = stories.filter((story) =>
-        currentUser.ownStories.some(
-          (myStory) => myStory.storyId === story.storyId
-        )
-      );
-      // build an instance of our own class using the new array of stories
-      // console.log(myStories);
-      return new StoryList(myStories);
-    } catch (error) {
-      console.log("getFav area error: " + " " + error);
-    }
-  }
 }
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -286,6 +245,7 @@ class User {
       });
       const dataF = res.data;
       console.log(dataF);
+      return dataF;
     } catch (error) {
       console.log(error);
     }
@@ -301,6 +261,40 @@ class User {
       console.log(dataF);
     } catch (error) {
       console.log(error);
+    }
+  }
+  static async getFav(user) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${user.username}`,
+        method: "GET",
+        params: { token: user.loginToken },
+      });
+
+      const favorites = response.data.user.favorites.map(
+        (story) => new Story(story)
+      );
+
+      return new StoryList(favorites);
+    } catch (error) {
+      console.log("getFav area error: " + " " + error);
+    }
+  }
+  static async getMyStories(user) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${user.username}`,
+        method: "GET",
+        params: { token: user.loginToken },
+      });
+
+      const myStories = response.data.user.stories.map(
+        (story) => new Story(story)
+      );
+
+      return new StoryList(myStories);
+    } catch (error) {
+      console.log("getFav area error: " + " " + error);
     }
   }
 }
