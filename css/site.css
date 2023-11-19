@@ -130,3 +130,18 @@ ol li {
   padding: 0.5rem;
   border-bottom: 2px solid hsl(6, 93%, 71%, 0.25);
 }
+
+.poping > form label {
+  text-align: left;
+  margin: 0;
+}
+.poping > form input {
+  margin-top: 0.2rem;
+  margin-bottom: 1.5rem;
+}
+.poping > form {
+  padding: 2rem 1rem;
+}
+.poping > form button {
+  margin: 0;
+}
