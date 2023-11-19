@@ -319,7 +319,22 @@ class User {
 
       console.log(response);
     } catch (error) {
+      console.log(`${error.name}: ${error.message}`);
+    }
+  }
+
+  static async delteUser() {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${currentUser.username}`,
+        method: "DELETE",
+        data: { token: currentUser.loginToken },
+      });
+
+      console.log(response);
+    } catch (error) {
       console.log(error);
+      console.log(`${error.name}: ${error.message}`);
     }
   }
 }

@@ -156,9 +156,17 @@
           <input type="text" name="password" id="password" />
           <div class="profileBtnDiv">
             <button type="submit">Save</button
-            ><button type="button">Delete My Account</button>
+            ><button type="button" id="deteleUserBtn">Delete My Account</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div id="confirmationPopup" class="popup-backdrop" style="display: none">
+      <div class="popup-content">
+        <p>Are you sure?</p>
+        <button id="yesButton">Yes</button>
+        <button id="noButton">No</button>
       </div>
     </div>
     <!-- Library JS & our JS -->

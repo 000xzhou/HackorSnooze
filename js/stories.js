@@ -302,7 +302,7 @@ $(".popup-form").click(function (event) {
 $("#popupUserProfileForm").submit(async function (event) {
   event.preventDefault(); // Prevent default form submission
 
-  var formData = {};
+  const formData = {};
   $(this)
     .find(":input")
     .each(function () {
@@ -312,6 +312,21 @@ $("#popupUserProfileForm").submit(async function (event) {
     });
 
   console.log(formData);
-  const x = await User.updateUser(formData);
-  console.log(x);
+  const res = await User.updateUser(formData);
+  console.log(res);
+});
+$("#deteleUserBtn").on("click", function deleteUser() {
+  $("#confirmationPopup").fadeIn();
+});
+$("#yesButton").click(async function () {
+  $("#confirmationPopup").fadeOut();
+  const res = await User.delteUser();
+  console.log(res);
+  // $("#popupUserProfile").fadeOut();
+  window.location.reload();
+});
+
+$("#noButton").click(function () {
+  $("#confirmationPopup").fadeOut();
+  return;
 });
