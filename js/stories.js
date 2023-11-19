@@ -9,6 +9,9 @@ let myStoryList;
 
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
+  if (currentUser) {
+    favStoryList = await User.getFav(currentUser);
+  }
   $storiesLoadingMsg.remove();
 
   putStoriesOnPage();
@@ -21,14 +24,28 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
+function getFavStar(story) {
+  let star = "fa-regular";
+  if (currentUser) {
+    for (let x in favStoryList.stories) {
+      if (Story.compareStory(favStoryList.stories[x], story)) {
+        star = "fa-solid";
+        break;
+      }
+    }
+  }
+  return star;
+}
+
 function generateStoryMarkup(story) {
   console.debug("generateStoryMarkup", story);
   const hostName = story.getHostName();
+  const star = getFavStar(story);
   return $(`
   <li id="${story.storyId}">
     <div class="inside-li-container">
       <div>
-        <i class="star-icon fa-regular fa-star fa-xl"></i>
+        <i class="star-icon ${star} fa-star fa-xl"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -43,11 +60,12 @@ function generateStoryMarkup(story) {
 //  generateMyStoriesMarkup for my stories to delete in that page
 function generateMyStoriesMarkup(story) {
   const hostName = story.getHostName();
+  const star = getFavStar(story);
   return $(`
   <li id="${story.storyId}">
     <div class="inside-li-container">
       <div>
-        <i class="star-icon fa-regular fa-star fa-xl"></i>
+        <i class="star-icon ${star} fa-star fa-xl"></i>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -82,12 +100,6 @@ function putStoriesOnPage() {
 }
 // get all my fav stories
 async function putFavStoriesOnPage() {
-  // console.log("hi on fav");
-  // favStoryList = await StoryList.getFav();
-  favStoryList = await User.getFav(currentUser);
-  // console.log(favStoryList);
-  // console.log(await User.getFav(currentUser).favorites);
-
   $allStoriesList.empty();
   // loop through all of our stories and generate HTML for them
   for (let story of favStoryList.stories) {
@@ -133,25 +145,49 @@ async function addStory(evt) {
     }
   }
 }
+// $allStoriesList.on("click", ".fa-regular", addtoFav);
+// async function addtoFav() {
+//   let storyId = this.parentElement.parentElement.parentElement.id;
+//   let res = await User.addFav(currentUser, storyId);
+//   // console.log(res.user);
+//   // console.log(favStoryList.stories);
+//   // console.log(await User.getFav(currentUser));
 
+//   $(this).removeClass("fa-regular").addClass("fa-solid");
+//   favStoryList = await User.getFav(currentUser);
+// }
+// $allStoriesList.on("click", ".fa-solid", deleteFromFav);
+// async function deleteFromFav() {
+//   let storyId = this.parentElement.parentElement.parentElement.id;
+//   // console.log(this.parentElement.parentElement.parentElement);
+//   await User.deleteFav(currentUser, storyId);
+//   $(this).removeClass("fa-solid").addClass("fa-regular");
+//   favStoryList = await User.getFav(currentUser);
+// }
 // adding and delete favs
 // toDO: Currently don't update HTML without hard reload. Same with adding new story
 // toDO: also need to save favStoryList, myStoryList, maybe the current(storyList) to local storage or something
 
-$allStoriesList.on("click", ".fa-regular", addtoFav);
-async function addtoFav() {
+$allStoriesList.on("click", ".fa-regular, .fa-solid", toggleFav);
+async function toggleFav() {
   let storyId = this.parentElement.parentElement.parentElement.id;
-  let res = await User.addFav(currentUser, storyId);
-  // console.log(res.user);
-  // console.log(favStoryList.stories);
-  // console.log(await User.getFav(currentUser));
-
-  $(this).removeClass("fa-regular").addClass("fa-solid");
-}
-$allStoriesList.on("click", ".fa-solid", deleteFromFav);
-async function deleteFromFav() {
-  let storyId = this.parentElement.parentElement.parentElement.id;
-  // console.log(this.parentElement.parentElement.parentElement);
-  await User.deleteFav(currentUser, storyId);
-  $(this).removeClass("fa-solid").addClass("fa-regular");
+  if ($(this).hasClass("fa-regular")) {
+    try {
+      let res = await User.addFav(currentUser, storyId);
+    } catch (error) {
+      console.error("Error adding favorite:", error);
+    }
+  } else {
+    try {
+      await User.deleteFav(currentUser, storyId);
+    } catch (error) {
+      console.error("Error deleting favorite:", error);
+    }
+  }
+  $(this).toggleClass("fa-regular fa-solid");
+  try {
+    favStoryList = await User.getFav(currentUser);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+  }
 }

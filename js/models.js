@@ -26,6 +26,17 @@ class Story {
     // UNIMPLEMENTED: complete this function!
     return "hostname.com";
   }
+
+  static compareStory(story1, story2) {
+    return (
+      story1.storyId === story2.storyId &&
+      story1.title === story2.title &&
+      story1.author === story2.author &&
+      story1.url === story2.url &&
+      story1.username === story2.username &&
+      story1.createdAt === story2.createdAt
+    );
+  }
 }
 
 /******************************************************************************
