@@ -123,13 +123,14 @@ class StoryList {
     }
   }
   async editMyStory(token, storyId, story) {
+    console.log(story);
     try {
-      // toDO: do testing on params
-      await axios({
+      const res = await axios({
         url: `${BASE_URL}/stories/${storyId}`,
         method: "PATCH",
-        params: { token, story },
+        data: { token, story },
       });
+      return new Story(res.data.story);
     } catch (error) {
       console.log("edit my story area error: " + " " + error);
     }

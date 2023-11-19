@@ -11,6 +11,7 @@ async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   if (currentUser) {
     favStoryList = await User.getFav(currentUser);
+    myStoryList = await User.getMyStories(currentUser);
   }
   $storiesLoadingMsg.remove();
 
@@ -74,8 +75,8 @@ function generateMyStoriesMarkup(story) {
         <small class="story story-user">posted by ${story.username}</small>
       </div>
       <div>
-        <button class="editBtn">Edit</button>
-        <button class="deleteBtn">Delete</button>
+        <button class="editMyStoryBtn">Edit</button>
+        <button class="deleteMyStoryBtn">Delete</button>
         </div>
     </div>
   </li>
@@ -100,6 +101,8 @@ function putStoriesOnPage() {
 }
 // get all my fav stories
 async function putFavStoriesOnPage() {
+  favStoryList = await User.getFav(currentUser);
+
   $allStoriesList.empty();
   // loop through all of our stories and generate HTML for them
   for (let story of favStoryList.stories) {
@@ -145,28 +148,7 @@ async function addStory(evt) {
     }
   }
 }
-// $allStoriesList.on("click", ".fa-regular", addtoFav);
-// async function addtoFav() {
-//   let storyId = this.parentElement.parentElement.parentElement.id;
-//   let res = await User.addFav(currentUser, storyId);
-//   // console.log(res.user);
-//   // console.log(favStoryList.stories);
-//   // console.log(await User.getFav(currentUser));
-
-//   $(this).removeClass("fa-regular").addClass("fa-solid");
-//   favStoryList = await User.getFav(currentUser);
-// }
-// $allStoriesList.on("click", ".fa-solid", deleteFromFav);
-// async function deleteFromFav() {
-//   let storyId = this.parentElement.parentElement.parentElement.id;
-//   // console.log(this.parentElement.parentElement.parentElement);
-//   await User.deleteFav(currentUser, storyId);
-//   $(this).removeClass("fa-solid").addClass("fa-regular");
-//   favStoryList = await User.getFav(currentUser);
-// }
 // adding and delete favs
-// toDO: Currently don't update HTML without hard reload. Same with adding new story
-// toDO: also need to save favStoryList, myStoryList, maybe the current(storyList) to local storage or something
 
 $allStoriesList.on("click", ".fa-regular, .fa-solid", toggleFav);
 async function toggleFav() {
@@ -190,4 +172,111 @@ async function toggleFav() {
   } catch (error) {
     console.error("Error fetching favorites:", error);
   }
+}
+
+$allStoriesList.on(
+  "click",
+  ".deleteMyStoryBtn",
+  async function deleteMyStoryHandler() {
+    let storyId = this.parentElement.parentElement.parentElement.id;
+    const res = await storyList.deleteMyStory(currentUser.loginToken, storyId);
+    this.parentElement.parentElement.parentElement.remove();
+    // update list
+    storyList = await StoryList.getStories();
+  }
+);
+// $allStoriesList.on(
+//   "click",
+//   ".editMyStoryBtn",
+//   async function editMyStoryHandler() {
+//     let storyId = this.parentElement.parentElement.parentElement.id;
+//     let story = {
+//       author: "pickingachu",
+//       title: "ver3.0",
+//       url: "https://www.coolmathgames.com/",
+//     };
+
+//     const res = await storyList.editMyStory(
+//       currentUser.loginToken,
+//       storyId,
+//       story
+//     );
+//     // update list
+//     storyList = await StoryList.getStories();
+//     putMyStoriesOnPage();
+//   }
+// );
+
+{
+  let storyId;
+  // Function to open the popup
+  function openPopup(author, title, url) {
+    $("#popupBackdrop").fadeIn();
+    $("#title2").val(title);
+    $("#author2").val(author);
+    $("#url2").val(url);
+  }
+
+  // Function to close the popup
+  $("#myPopupForm").on("submit", async function name(e) {
+    e.preventDefault();
+    let story = {};
+    let elements = this.elements;
+
+    for (let i = 0; i < elements.length; i++) {
+      let input = elements[i];
+      if (input.name && input.value) {
+        story[input.name.slice(0, -1)] = input.value;
+      }
+    }
+    // console.log(storyId);
+    // console.log(story);
+    const res = await storyList.editMyStory(
+      currentUser.loginToken,
+      storyId,
+      story
+    );
+    closePopup();
+    storyList = await StoryList.getStories();
+    favStoryList = await User.getFav(currentUser);
+    putMyStoriesOnPage();
+  });
+  function closePopup() {
+    $("#popupBackdrop").fadeOut();
+  }
+  // Event handler to open the popup, e.g., on a button click
+  $allStoriesList.on("click", ".editMyStoryBtn", function () {
+    // console.log(this.closest(".story-link").val());
+    // console.log($(this).closest(".story-link").val());
+    let author = $(this)
+      .closest("div")
+      .prev("div")
+      .find(".story-author")
+      .text()
+      .slice(3)
+      .trim();
+    let title = $(this)
+      .closest("div")
+      .prev("div")
+      .find(".story-link")
+      .text()
+      .trim();
+    let url = $(this)
+      .closest("div")
+      .prev("div")
+      .find(".story-link")
+      .attr("href")
+      .trim();
+
+    storyId = this.parentElement.parentElement.parentElement.id;
+
+    openPopup(author, title, url);
+  });
+
+  // Event handler to close the popup when clicking outside the popup form
+  $("#popupBackdrop").click(function (event) {
+    if (event.target === this) {
+      closePopup();
+    }
+  });
 }
