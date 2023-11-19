@@ -309,4 +309,17 @@ class User {
       console.log("getFav area error: " + " " + error);
     }
   }
+  static async updateUser(user) {
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/users/${currentUser.username}`,
+        method: "PATCH",
+        data: { token: currentUser.loginToken, user },
+      });
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

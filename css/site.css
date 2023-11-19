@@ -145,3 +145,22 @@ ol li {
 .poping > form button {
   margin: 0;
 }
+.profileBtnDiv > button {
+  width: max-content;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  border: 4px solid transparent;
+  border-radius: 0.5rem;
+}
+
+.profileBtnDiv > button[type="button"] {
+  background-color: red;
+}
+.profileBtnDiv > button[type="button"]:hover {
+  border-radius: 0.5rem;
+  border: 4px solid white;
+  outline: 2px solid red;
+}
+#popupUserProfileForm label {
+  text-align: left;
+}

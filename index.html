@@ -130,7 +130,7 @@
         <button type="submit">Submit</button>
       </form>
     </section>
-
+    <!-- add edit form  -->
     <div id="popupBackdrop" class="popup-backdrop">
       <div class="popup-form">
         <form id="myPopupForm">
@@ -145,6 +145,22 @@
       </div>
     </div>
 
+    <div id="popupUserProfile" class="popup-backdrop">
+      <div class="popup-form">
+        <form id="popupUserProfileForm">
+          <label for="name">Name: </label>
+          <input type="text" name="name" id="name" />
+          <label for="name">Username: </label>
+          <input type="text" name="username" id="username" />
+          <label for="password">Password: </label>
+          <input type="text" name="password" id="password" />
+          <div class="profileBtnDiv">
+            <button type="submit">Save</button
+            ><button type="button">Delete My Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <!-- Library JS & our JS -->
     <script src="https://unpkg.com/jquery"></script>
     <script src="https://unpkg.com/axios/dist/axios.js"></script>

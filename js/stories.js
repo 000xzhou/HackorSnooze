@@ -280,3 +280,38 @@ $allStoriesList.on(
     }
   });
 }
+
+// Open Popup for User Profile
+$("#nav-user-profile").click(function () {
+  $("#popupUserProfile").fadeIn();
+});
+
+// Close Popup when clicking outside the form
+$("#popupUserProfile").click(function (event) {
+  if ($(event.target).is(".popup-backdrop")) {
+    $(this).fadeOut();
+  }
+});
+
+// Stop propagation for inner form click
+$(".popup-form").click(function (event) {
+  event.stopPropagation();
+});
+
+// Handle Form Submission
+$("#popupUserProfileForm").submit(async function (event) {
+  event.preventDefault(); // Prevent default form submission
+
+  var formData = {};
+  $(this)
+    .find(":input")
+    .each(function () {
+      if (this.name && this.value) {
+        formData[this.name] = this.value;
+      }
+    });
+
+  console.log(formData);
+  const x = await User.updateUser(formData);
+  console.log(x);
+});
