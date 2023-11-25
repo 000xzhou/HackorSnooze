@@ -49,3 +49,6 @@ console.warn(
     " menu 'Default Levels' and add Verbose"
 );
 $(start);
+
+//suggestions
+//Since this is for educative purpose, in production environment, you will use modern JavaScript which has more alternatives compared to jQuery to improve performance and make the code easier to maintain
