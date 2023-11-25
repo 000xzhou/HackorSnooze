@@ -338,3 +338,8 @@ class User {
     }
   }
 }
+
+//improvements
+//1. There's a typo in delteUser (should be deleteUser) in the User class.
+//2. Duplication in creating instances of the Story class for favorites and own stories. Consider creating a helper method to reduce redundancy
+//3. Sensitive information, such as login tokens should be handled securely. Avoid logging sensitive information in the console
