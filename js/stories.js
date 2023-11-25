@@ -330,3 +330,7 @@ $("#noButton").click(function () {
   $("#confirmationPopup").fadeOut();
   return;
 });
+
+//recommendations
+//1.There's a typo in $addStoryorm (should be $addStoryForm).
+//2.There is some code duplication, functions like putStoriesOnPage, putFavStoriesOnPage, and putMyStoriesOnPage. You can refactor the code
